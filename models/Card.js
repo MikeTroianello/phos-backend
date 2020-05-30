@@ -17,6 +17,9 @@ const cardSchema = new Schema({
   example: {
     type: String,
   },
+  reference: {
+    type: String,
+  },
   hashtag: {
     type: ArrayBuffer,
   },

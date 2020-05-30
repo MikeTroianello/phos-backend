@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
-  name: {
+  username: {
     type: String,
     required: true,
   },
@@ -26,6 +26,12 @@ const userSchema = new Schema({
     type: Array,
   },
   dislikes: {
+    type: Array,
+  },
+  followers: {
+    type: Array,
+  },
+  following: {
     type: Array,
   },
   deleted: {

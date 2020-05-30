@@ -1,1 +1,7 @@
-*history
+*history 
+
+.env
+
+node_modules
+
+npm-debug.log
