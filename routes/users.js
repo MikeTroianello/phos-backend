@@ -18,8 +18,6 @@ router.post('/signup', (req, res, next) => {
   let email = req.body.email;
   let phone = req.body.phone;
 
-  console.log('STARTING SIGN UP', req.body);
-
   if (!username || !password) {
     return res.json({ message: 'Please include both a username and password' });
   }
@@ -28,17 +26,13 @@ router.post('/signup', (req, res, next) => {
   username = username.toLowerCase();
   password = password.toLowerCase();
 
-  console.log('oh no.....');
-
   User.findOne({ username })
     .then((user) => {
-      console.log('USER FOUND:', user);
       if (user !== null) {
         res.json({ message: 'The username already exists' });
         return;
       }
 
-      console.log('IT DIDNT BREAK WITH USER FIND ONE');
       const salt = bcrypt.genSaltSync(bcryptSalt);
       const hashPass = bcrypt.hashSync(password, salt);
 
@@ -49,11 +43,8 @@ router.post('/signup', (req, res, next) => {
         phone,
       });
 
-      console.log('almost there', newUser);
-
       newUser.save((err) => {
         if (err) {
-          console.log('HERE');
           res.json({ message: err });
         } else {
           // req.login(newUser, (err) => {

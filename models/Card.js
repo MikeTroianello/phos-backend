@@ -1,18 +1,18 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.schema;
+const Schema = mongoose.Schema;
 
 const cardSchema = new Schema({
   type: {
     type: String,
-    required: True,
+    required: true,
   },
   title: {
     type: String,
-    required: True,
+    required: true,
   },
   description: {
     type: String,
-    required: True,
+    required: true,
   },
   example: {
     type: String,
@@ -20,8 +20,8 @@ const cardSchema = new Schema({
   reference: {
     type: String,
   },
-  hashtag: {
-    type: ArrayBuffer,
+  tags: {
+    type: Array,
   },
   creatorId: { type: Schema.Types.ObjectId, ref: 'User' },
   favorites: {
