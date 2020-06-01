@@ -1,11 +1,11 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.schema;
+const Schema = mongoose.Schema;
 
 const collectionSchema = new Schema({
   name: {
     type: String,
   },
-  collection: {
+  cards: {
     type: Array,
   },
   tags: {

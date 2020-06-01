@@ -8,6 +8,15 @@ router.get('/', function (req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
+//GET ALL CARDS
+router.get('/all', async (req, res) => {
+  let allCards = await Card.find();
+  console.log('GETTING ALL CARDS', allCards);
+  res.json(allCards);
+});
+
+//CREATE CARD
+
 router.post('/create', (req, res) => {
   console.log('CREATING', req.body);
 
