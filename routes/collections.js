@@ -59,6 +59,7 @@ router.patch('/add/:collectionId/:cardId', async (req, res) => {
 //   });
 // });
 
+//REMOVE CARDS FROM ARRAY
 router.patch('/remove/:collectionId/:cardId', async (req, res) => {
   Collection.findByIdAndUpdate(
     req.params.collectionId,
@@ -77,6 +78,21 @@ router.patch('/remove/:collectionId/:cardId', async (req, res) => {
   ).then((a) => {
     console.log(a);
     res.json(a);
+  });
+});
+
+//DELETE COLLECTION
+// router.post('/delete/:collectionId', (req, res) => {
+//   console.log(req.params.collectionId);
+//   Collection.findByIdAndRemove(req.params.collectionId).then(() => {
+//     res.json({ message: 'deleted' });
+//   });
+// });
+
+router.delete('/delete/:collectionId', (req, res) => {
+  console.log(req.params.collectionId);
+  Collection.findByIdAndDelete(req.params.collectionId).then(() => {
+    res.json({ message: 'deleted' });
   });
 });
 
