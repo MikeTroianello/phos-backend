@@ -82,12 +82,6 @@ router.patch('/remove/:collectionId/:cardId', async (req, res) => {
 });
 
 //DELETE COLLECTION
-// router.post('/delete/:collectionId', (req, res) => {
-//   console.log(req.params.collectionId);
-//   Collection.findByIdAndRemove(req.params.collectionId).then(() => {
-//     res.json({ message: 'deleted' });
-//   });
-// });
 
 router.delete('/delete/:collectionId', (req, res) => {
   console.log(req.params.collectionId);

@@ -24,7 +24,7 @@ const cardSchema = new Schema({
     type: Array,
   },
   creatorId: { type: Schema.Types.ObjectId, ref: 'User' },
-  favorites: {
+  important: {
     type: Number,
     default: 0,
   },
