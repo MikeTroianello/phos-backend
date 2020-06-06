@@ -5,9 +5,10 @@ const collectionSchema = new Schema({
   name: {
     type: String,
   },
-  cards: {
-    type: Array,
-  },
+  // cards: {
+  //   type: Array,
+  // },
+  cards: [{ type: Schema.Types.ObjectId, ref: 'Card' }],
   tags: {
     type: Array,
   },

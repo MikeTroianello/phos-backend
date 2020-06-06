@@ -3,7 +3,6 @@ var router = express.Router();
 const chalk = require('chalk');
 
 const Card = require('../models/Card');
-
 const { check, validationResult } = require('express-validator/check');
 
 // router.post(
@@ -77,6 +76,7 @@ router.post(
       creatorId,
       hideCreator,
       public,
+      creatorId: '5edb0f84c3886838ae6cfd30',
     });
 
     const errors = validationResult(req);
