@@ -1,19 +1,28 @@
+require('dotenv').config();
 var express = require('express');
 var router = express.Router();
 
 const bcrypt = require('bcrypt');
 const bcryptSalt = 10;
-
+const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
 const chalk = require('chalk');
 
 const { check, validationResult } = require('express-validator/check');
 
+const auth = require('../middleware/auth');
+
 /* GET users listing. */
-router.get('/', function (req, res, next) {
-  console.log('THIS WORKS');
-  res.json({ message: 'respond with a resource' });
+router.get('/', auth, async (req, res, next) => {
+  try {
+    console.log(chalk.blueBright('HERE'));
+    const user = await User.findById(req.user.id).select('-password');
+    console.log(chalk.green(user));
+    res.json({ user });
+  } catch {
+    res.status(500).json({ message: 'Server Error' });
+  }
 });
 
 //SIGN UP
@@ -64,7 +73,27 @@ router.post(
             if (err) {
               res.json({ message: err });
             } else {
-              res.json({ message: 'USER CREATED', newUser: newUser });
+              const payload = {
+                user: {
+                  id: newUser.id,
+                },
+              };
+
+              jwt.sign(
+                payload,
+                process.env.SECRET,
+                {
+                  expiresIn: 360000,
+                },
+                (err, token) => {
+                  if (err) throw err;
+                  else {
+                    res.json({ token });
+                  }
+                }
+              );
+
+              // res.json({ message: 'USER CREATED', newUser: newUser });
             }
           });
         })
