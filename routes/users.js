@@ -104,4 +104,52 @@ router.post(
   }
 );
 
+//LOG IN
+router.post(
+  '/login',
+  [check('username', 'Please include a username').exists()],
+  [check('password', 'Please include a password').exists()],
+  async (req, res) => {
+    // console.log(chalk.greenBright(req.body));
+    let { username, password } = req.body;
+
+    let user = await User.findOne({
+      lowerCaseUsername: username.toLowerCase(),
+    });
+
+    if (!user) {
+      return res.json({ message: 'Username not found' });
+    }
+
+    // const salt = bcrypt.genSaltSync(bcryptSalt);
+    // const hashPass = bcrypt.hashSync(password, salt);
+
+    const match = await bcrypt.compare(password, user.password);
+
+    if (!match) {
+      return res.json({ message: 'Password was incorrect' });
+    }
+
+    const payload = {
+      user: {
+        id: user.id,
+      },
+    };
+
+    jwt.sign(
+      payload,
+      process.env.SECRET,
+      {
+        expiresIn: 360000,
+      },
+      (err, token) => {
+        if (err) throw err;
+        else {
+          res.json({ token });
+        }
+      }
+    );
+  }
+);
+
 module.exports = router;

@@ -82,15 +82,16 @@ router.post(
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       console.log(chalk.red('FAIL'));
-      res.status(422).json({ errors: errors.array().map((err) => err.msg) });
+      res.status(422).json({ message: errors.array().map((err) => err.msg) });
     } else {
       console.log(chalk.cyan('next step'));
       newCard.save((err) => {
         if (err) {
           console.log('ERROR', err);
-          res.json(err);
+          // res.json(err);
+          res.json({ message: err });
         } else {
-          res.json({ message: 'SUCCESSSS', newCard: newCard });
+          res.json({ message: `${title} has been created!` });
         }
       });
     }
