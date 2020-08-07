@@ -30,7 +30,8 @@ app.use(cors());
 
 //MONGO
 
-const uri = process.env.MONGODB_URI;
+// const uri = process.env.MONGODB_URI;
+const uri = 'mongodb://localhost/phos';
 
 mongoose
   .connect(uri, {

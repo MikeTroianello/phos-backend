@@ -16,7 +16,7 @@ const collectionSchema = new Schema({
     type: Boolean,
     default: false,
   },
-  creatorID: { type: Schema.Types.ObjectId, ref: 'User' },
+  creatorId: { type: Schema.Types.ObjectId, ref: 'User' },
   timeStamp: { type: Date, default: Date.now },
 });
 

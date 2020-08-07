@@ -7,11 +7,20 @@ const Collection = require('../models/Collection');
 router.post('/create', async (req, res) => {
   let { name, tags, public } = req.body;
   if (!public) public = false;
+  let creatorId = '5edb0f84c3886838ae6cfd30';
   tags = tags.split(' ');
-  const newCollection = new Collection({ name, tags, public });
+  const newCollection = new Collection({ name, tags, public, creatorId });
   const savedCollection = await newCollection.save();
   console.log('collection has been saved');
   res.json(savedCollection);
+});
+
+//SEE ALL COLLECTIONS
+router.get('/all', async (req, res) => {
+  console.log('AAAHHHHHHHHHHHH');
+  let collections = await Collection.find();
+  console.log(collections);
+  res.json(collections);
 });
 
 //VIEW COLLECTION
@@ -32,6 +41,10 @@ router.patch('/add/:collectionId/:cardId', async (req, res) => {
   // console.log('ADDED NEW CARD', collection);
   res.json(collection);
 });
+
+//GET ALL YOUR COLLECTIONS
+
+//SEARCH FOR RELATED CONNECTIONS
 
 // router.patch('/add/:collectionId/:cardId', (req, res) => {
 //   Collection.findByIdAndUpdate(
