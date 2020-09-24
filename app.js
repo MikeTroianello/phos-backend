@@ -50,6 +50,19 @@ mongoose
 // app.use('/', indexRouter);
 // app.use('/users', usersRouter);
 
+app.use(
+  cors({
+    credentials: true,
+    origin: ['http://phos.surge.sh'],
+  })
+);
+// app.use(
+//   cors({
+//     credentials: true,
+//     origin: ['http://localhost:3000']
+//   })
+// );
+
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/cards', cardsRouter);
