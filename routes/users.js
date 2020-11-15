@@ -140,7 +140,7 @@ router.post(
       payload,
       process.env.SECRET,
       {
-        expiresIn: 360000,
+        expiresIn: 3600000,
       },
       (err, token) => {
         if (err) throw err;
@@ -151,5 +151,18 @@ router.post(
     );
   }
 );
+
+//TEST LOGIN
+router.get('/checkLogin', auth, async (req,res) => {
+  try{
+  console.log(req.user.id)
+  let user = await User.findById(req.user.id)
+  console.log("SUCCESS????", user)
+  res.json({msg:'successs'})
+  }catch(err){
+    console.log("FAIL")
+    res.json({msg: "FAILURE"})
+  }
+})
 
 module.exports = router;

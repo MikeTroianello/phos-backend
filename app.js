@@ -9,11 +9,7 @@ const mongoose = require('mongoose');
 
 const cors = require('cors');
 
-//ROUTES
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-var cardsRouter = require('./routes/cards');
-var collectionsRouter = require('./routes/collections');
+
 
 var app = express();
 
@@ -46,9 +42,7 @@ mongoose
   .catch((err) => {
     console.error('Error connecting to mongo', err);
   });
-
-// app.use('/', indexRouter);
-// app.use('/users', usersRouter);
+ 
 
 // app.use(
 //   cors({
@@ -56,12 +50,22 @@ mongoose
 //     origin: ['http://phos.surge.sh'],
 //   })
 // );
+
+
 app.use(
   cors({
     credentials: true,
-    origin: ['http://localhost:3000'],
+    origin: ['http://localhost:3000'] 
   })
 );
+
+
+//ROUTES
+var indexRouter = require('./routes/index');
+var usersRouter = require('./routes/users');
+var cardsRouter = require('./routes/cards');
+var collectionsRouter = require('./routes/collections');
+
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
