@@ -3,16 +3,15 @@ const jwt = require('jsonwebtoken');
 const chalk = require('chalk');
 
 module.exports = (req, res, next) => {
+  console.log(chalk.redBright("HERE"))
   const token = req.header('x-auth-token');
-  if (!token) {
-    return res.status(401).json({ message: 'You are not logged in' });
-  }
+  console.log(chalk.redBright(token))
   try {
     const decoded = jwt.verify(token, process.env.SECRET);
-
-    req.user = decoded.user;
+    req.user = decoded.user; 
     next();
   } catch {
-    res.status(401).json({ message: 'json-token is invalid' });
+    req.user={id:null}
+    next()
   }
 };

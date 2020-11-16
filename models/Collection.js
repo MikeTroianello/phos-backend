@@ -12,10 +12,11 @@ const collectionSchema = new Schema({
   tags: {
     type: Array,
   },
-  public: {
+  private: {
     type: Boolean,
     default: false,
   },
+  likes: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   creatorId: { type: Schema.Types.ObjectId, ref: 'User' },
   timeStamp: { type: Date, default: Date.now },
 });
