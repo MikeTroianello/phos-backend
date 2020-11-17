@@ -6,12 +6,14 @@ const bcrypt = require('bcrypt');
 const bcryptSalt = 10;
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const Collection = require('../models/Collection');
 
 const chalk = require('chalk');
 
 const { check, validationResult } = require('express-validator/check');
 
 const auth = require('../middleware/auth');
+const getId = require('../middleware/getId')
 
 /* GET users listing. */
 router.get('/', auth, async (req, res, next) => {
@@ -162,6 +164,20 @@ router.get('/checkLogin', auth, async (req,res) => {
   }catch(err){
     console.log("FAIL")
     res.json({msg: "FAILURE"})
+  }
+})
+
+//PROFILE PAGE
+router.get('/profiles/:username', getId, async (req,res)=>{
+  try{let lower = req.params.username.toLowerCase()
+  let user = await User.find({lowerCaseUsername: lower}).populate('collections')
+  // let collections = await Collection.find({creatorId: req.user.id})
+  // console.log(chalk.redBright(collections))
+  console.log(chalk.greenBright(user))
+  res.json({user})
+}catch(err){
+    console.log(err)
+    res.json(err)
   }
 })
 

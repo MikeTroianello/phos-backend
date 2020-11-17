@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 const cardSchema = new Schema({
   type: {
     type: String,
+    enum: ['definition', 'question'],
     required: true,
   },
   title: {

@@ -8,7 +8,7 @@ module.exports = (req, res, next) => {
   console.log(chalk.redBright(token))
   try {
     const decoded = jwt.verify(token, process.env.SECRET);
-    req.user = decoded.user; 
+    req.user.id = decoded.user.id; 
     next();
   } catch {
     req.user={id:null}

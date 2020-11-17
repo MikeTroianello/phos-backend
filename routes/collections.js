@@ -1,10 +1,13 @@
+const chalk = require('chalk');
 const express = require('express');
 const router = express.Router();
+
 
 const auth = require('../middleware/auth')
 const getId = require('../middleware/getId')
 
 const Collection = require('../models/Collection');
+const User = require('../models/User');
 
 //CREATE COLLECTION
 router.post('/create',auth, async (req, res) => {
@@ -13,21 +16,17 @@ router.post('/create',auth, async (req, res) => {
   tags = tags.split(' ');
   const newCollection = new Collection({ name, tags, private, creatorId:req.user.id });
   const savedCollection = await newCollection.save();
-  console.log('collection has been saved');
+  let user = await User.findById(req.user.id);
+  user.collections.push(newCollection._id)
+  await user.save()
   res.json(savedCollection);
 });
 
 //SEE ALL COLLECTIONS
 router.get('/all',getId, async (req, res) => {
-  // console.log('THE USER IS', req.user)
-  let collections = await Collection.find().populate('creatorId').select('-');
-  console.log(collections);
+  let collections = await Collection.find().populate('creatorId')
   let newCollections = collections.map(collection=>{
-      // collection.userCreated=(collection.creatorId ===req.user.id)
       let {name, cards,tags,likes, _id, creatorId} = collection
-      console.log(creatorId._id)
-      console.log(req.user.id)
-      console.log(creatorId._id ==req.user.id)
       return {
         name, 
         cards,
@@ -38,7 +37,6 @@ router.get('/all',getId, async (req, res) => {
         creatorUsername: creatorId.username
       }
   })
-  console.log(newCollections)
   res.json(newCollections);
 });
 

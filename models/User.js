@@ -23,21 +23,18 @@ const userSchema = new Schema({
   phone: {
     type: String,
   },
-  collections: {
-    type: Array,
-  },
-  important: {
-    type: Array,
-  },
+  collections: [{type: Schema.Types.ObjectId, ref: 'Collection' }],
+  importantCards:[{type: Schema.Types.ObjectId, ref: 'Card' }],
   dislikes: {
     type: Array,
   },
-  followers: {
-    type: Array,
+  likesFromOtherUsers:{
+    type: Number,
+    default: 0
   },
-  following: {
-    type: Array,
-  },
+  followers: [{type: Schema.Types.ObjectId, ref: 'User' }],
+  following: [{type: Schema.Types.ObjectId, ref: 'User' }],
+  collectionsFollowing:[{type: Schema.Types.ObjectId, ref: 'Collection' }],
   deleted: {
     type: Boolean,
     default: false,
