@@ -170,11 +170,11 @@ router.get('/checkLogin', auth, async (req,res) => {
 //PROFILE PAGE
 router.get('/profiles/:username', getId, async (req,res)=>{
   try{let lower = req.params.username.toLowerCase()
-  let user = await User.find({lowerCaseUsername: lower}).populate('collections')
+  let user = await User.findOne({lowerCaseUsername: lower}).populate('collections')
   // let collections = await Collection.find({creatorId: req.user.id})
   // console.log(chalk.redBright(collections))
   console.log(chalk.greenBright(user))
-  res.json({user})
+  res.json(user)
 }catch(err){
     console.log(err)
     res.json(err)
