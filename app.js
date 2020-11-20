@@ -24,6 +24,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors());
 
+console.clear()
+
 //MONGO
 
 // const uri = process.env.MONGODB_URI;
