@@ -43,18 +43,15 @@ router.get('/view/:cardId', async (req, res) => {
 router.post(
   '/create',
   [
-    check('type', 'You must include a Type').not().isEmpty(),
-    check('title', 'You must include a Title').not().isEmpty(),
-    check('description', 'You must include a Description').not().isEmpty(),
+    check('frontside', 'You must include a Frontside').not().isEmpty(),
+    check('backside', 'You must include a backside').not().isEmpty(),
   ],
   (req, res) => {
     console.log('CREATING', req.body);
 
     let {
-      type,
-      title,
-      description,
-      example,
+      frontside,
+      backside,
       reference,
       tags,
       creatorId,
@@ -67,10 +64,8 @@ router.post(
     }
 
     const newCard = new Card({
-      type,
-      title,
-      description,
-      example,
+      frontside,
+      backside,
       reference,
       tags,
       creatorId,
@@ -91,7 +86,7 @@ router.post(
           // res.json(err);
           res.json({ message: err });
         } else {
-          res.json({ message: `${title} has been created!` });
+          res.json({ message: `${frontside} has been created!` });
         }
       });
     }

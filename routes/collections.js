@@ -2,62 +2,100 @@ const chalk = require('chalk');
 const express = require('express');
 const router = express.Router();
 
-
-const auth = require('../middleware/auth')
-const getId = require('../middleware/getId')
+const auth = require('../middleware/auth');
+const getId = require('../middleware/getId');
 
 const Collection = require('../models/Collection');
 const User = require('../models/User');
+const Card = require('../models/Card');
 
 //CREATE COLLECTION
-router.post('/create',auth, async (req, res) => {
+router.post('/create', auth, async (req, res) => {
   let { name, tags, private } = req.body;
   if (!private) private = false;
   tags = tags.split(' ');
-  const newCollection = new Collection({ name, tags, private, creatorId:req.user.id });
+  const newCollection = new Collection({
+    name,
+    tags,
+    private,
+    creatorId: req.user.id,
+  });
   const savedCollection = await newCollection.save();
   let user = await User.findById(req.user.id);
-  user.collections.push(newCollection._id)
-  await user.save()
+  user.collections.push(newCollection._id);
+  await user.save();
   res.json(savedCollection);
 });
 
 //SEE ALL COLLECTIONS
-router.get('/all',getId, async (req, res) => {
-  let collections = await Collection.find().populate('creatorId')
-  let newCollections = collections.map(collection=>{
-      let {name, cards,tags,likes, _id, creatorId} = collection
-      return {
-        name, 
-        cards,
-        tags,
-        likes, 
-        id:_id, 
-        userCreated: (creatorId._id ==req.user.id),
-        creatorUsername: creatorId.username
-      }
-  })
+router.get('/all', getId, async (req, res) => {
+  let collections = await Collection.find().populate('creatorId');
+  let newCollections = collections.map((collection) => {
+    console.log('WHAT IS HAPPENING', collection);
+    let { name, cards, tags, likes, _id, creatorId } = collection;
+    return {
+      name,
+      cards,
+      tags,
+      likes,
+      _id,
+      userCreated: creatorId._id == req.user.id,
+      creatorUsername: creatorId.username,
+    };
+  });
   res.json(newCollections);
 });
 
 //VIEW COLLECTION
-router.get('/:collectionId', (req, res) => {
-
-  Collection.findById(req.params.collectionId).then((a) => {
-    console.log('HERE', a);
-    res.json(a);
-  });
+router.get('/:collectionId/view', async (req, res) => {
+  console.log('SOMETHING SHOULD BE HAPPENEING HERE');
+  let results = await Collection.findById(req.params.collectionId).populate(
+    'cards'
+  );
+  console.log(results);
+  res.json(results);
 });
 
-//ADD TO COLLECTION
-router.patch('/add/:collectionId/:cardId', async (req, res) => {
-  let collection = await Collection.findOne({ _id: req.params.collectionId });
-  // console.log('this is the collection', collection);
-  collection.cards.push(req.params.cardId);
-  // console.log('THIS IS THE COLLECTION NOW', collection);
-  await collection.save();
-  // console.log('ADDED NEW CARD', collection);
-  res.json(collection);
+//ADD ARRAY TO COLLECTION
+router.post('/add/:collectionId', auth, async (req, res) => {
+  try {
+    console.log('REQ DAT BODY', req.body);
+    let theArrayToPush = await Card.insertMany(req.body);
+    console.log(req.params);
+    //MADE IT THIS FAR
+    let collection = await Collection.findOne({ _id: req.params.collectionId });
+    console.log('this is the collection', collection);
+    // collection.cards.push(req.params.cardId);
+    let idArr = [];
+    for (let i = 0; i < theArrayToPush.length; i++) {
+      idArr.push(theArrayToPush[i]._id);
+    }
+    console.log('ARRR MAYTEEE', idArr);
+    collection.cards = [...collection.cards, ...idArr];
+    console.log('THIS IS THE COLLECTION NOW', collection);
+    await collection.save();
+    console.log('ADDED NEW CARD', collection);
+    res.json(collection);
+  } catch (err) {
+    console.error(err);
+    res.json({ msg: err });
+  }
+});
+
+//ADD AN EXISTING CARD TO A COLLECTION. MAYBE USE THIS LATER
+router.post('/add/:collectionId/:cardId', async (req, res) => {
+  try {
+    let collection = await Collection.findOne({ _id: req.params.collectionId });
+    console.log('this is the collection', collection);
+    collection.cards.push(req.params.cardId);
+    console.log('THIS IS THE COLLECTION NOW', collection);
+    await collection.save();
+    console.log('ADDED NEW CARD', collection);
+    res.json(collection);
+  } catch (err) {
+    console.error(err);
+    res.json({ msg: err });
+  }
 });
 
 //GET ALL YOUR COLLECTIONS
@@ -89,6 +127,15 @@ router.patch('/add/:collectionId/:cardId', async (req, res) => {
 //     res.json(a);
 //   });
 // });
+
+router.post('/add/:collectionId/:cardId', (req, res) => {
+  Collection.findByIdAndUpdate(req.params.collectionId, {
+    $push: { cards: req.params.cardId },
+  }).then((a) => {
+    console.log('ADDED NEW CARD', a);
+    res.json(a);
+  });
+});
 
 //REMOVE CARDS FROM ARRAY
 router.patch('/remove/:collectionId/:cardId', async (req, res) => {

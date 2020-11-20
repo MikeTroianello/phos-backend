@@ -13,7 +13,7 @@ const chalk = require('chalk');
 const { check, validationResult } = require('express-validator/check');
 
 const auth = require('../middleware/auth');
-const getId = require('../middleware/getId')
+const getId = require('../middleware/getId');
 
 /* GET users listing. */
 router.get('/', auth, async (req, res, next) => {
@@ -147,7 +147,7 @@ router.post(
       (err, token) => {
         if (err) throw err;
         else {
-          res.json({ token });
+          res.json({ token, id: user.id });
         }
       }
     );
@@ -155,38 +155,61 @@ router.post(
 );
 
 //TEST LOGIN
-router.get('/checkLogin', auth, async (req,res) => {
-  try{
-  console.log(req.user.id)
-  let user = await User.findById(req.user.id)
-  console.log("SUCCESS????", user)
-  res.json({msg:'successs'})
-  }catch(err){
-    console.log("FAIL")
-    res.json({msg: "FAILURE"})
+router.get('/checkLogin', auth, async (req, res) => {
+  try {
+    console.log(req.user.id);
+    let user = await User.findById(req.user.id);
+    console.log('SUCCESS????', user);
+    res.json({ msg: 'successs' });
+  } catch (err) {
+    console.log('FAIL');
+    res.json({ msg: 'FAILURE' });
   }
-})
+});
 
 //PROFILE PAGE
-router.get('/profiles/:username', getId, async (req,res)=>{
-  try{
-  let lower = req.params.username.toLowerCase()
-  let user = await User.findOne({lowerCaseUsername: lower}).populate('collections')
-  // let collections = await Collection.find({creatorId: req.user.id})
-  // console.log(chalk.redBright(collections))
-  
-  let {username, collections, importantCards, likesFromOtherUsers, followers, following, collectionsFollowing, _id} = user
-  console.log(chalk.greenBright(req.user.you))
-  if(!req.user.you){_id=null}
-  console.log(_id)
-  let cleanUser = {username, collections, importantCards, likesFromOtherUsers, followers, following, collectionsFollowing, id: _id, you: req.user.you}
-  console.log(chalk.greenBright(user))
-  console.log(chalk.blueBright(cleanUser))
-  res.json(cleanUser)
-}catch(err){
-    console.log(err)
-    res.json(err)
+router.get('/profiles/:username', getId, async (req, res) => {
+  try {
+    let lower = req.params.username.toLowerCase();
+    let user = await User.findOne({ lowerCaseUsername: lower }).populate(
+      'collections'
+    );
+    // let collections = await Collection.find({creatorId: req.user.id})
+    // console.log(chalk.redBright(collections))
+
+    let {
+      username,
+      collections,
+      importantCards,
+      likesFromOtherUsers,
+      followers,
+      following,
+      collectionsFollowing,
+      _id,
+    } = user;
+    console.log(chalk.greenBright(req.user.you));
+    if (!req.user.you) {
+      _id = null;
+    }
+    console.log(_id);
+    let cleanUser = {
+      username,
+      collections,
+      importantCards,
+      likesFromOtherUsers,
+      followers,
+      following,
+      collectionsFollowing,
+      id: _id,
+      you: req.user.you,
+    };
+    console.log(chalk.greenBright(user));
+    console.log(chalk.blueBright(cleanUser));
+    res.json(cleanUser);
+  } catch (err) {
+    console.log(err);
+    res.json(err);
   }
-})
+});
 
 module.exports = router;

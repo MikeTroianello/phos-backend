@@ -2,21 +2,15 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const cardSchema = new Schema({
-  // type: {
-  //   type: String,
-  //   enum: ['definition', 'question'],
-  //   required: true,
-  // },
   definition: {
     type: Boolean,
-    default: false,
-    required: true,
+    default: true,
   },
-  title: {
+  frontside: {
     type: String,
     required: true,
   },
-  description: {
+  backside: {
     type: String,
     required: true,
   },
