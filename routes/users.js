@@ -147,7 +147,7 @@ router.post(
       (err, token) => {
         if (err) throw err;
         else {
-          res.json({ token, id: user.id });
+          res.json({ token, id: user.id, success: true });
         }
       }
     );
