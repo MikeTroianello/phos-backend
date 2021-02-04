@@ -37,7 +37,7 @@ const cardSchema = new Schema({
   },
   public: {
     type: Boolean,
-    default: false,
+    default: true,
   },
   timeStamp: { type: Date, default: Date.now },
 });
